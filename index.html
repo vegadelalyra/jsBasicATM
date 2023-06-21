@@ -14,9 +14,9 @@
     <form>
         <h5> Accediendo como <span>ADMINISTRADOR</span></h5><br><br>
         <label for="user">Documento de Identidad</label>
-        <input type="text" id="user" name="user" maxlength="12" pattern="\d*"><br>
+        <input type="text" id="user" name="user" maxlength="12" pattern="\d*" required><br>
         <label for="pass">Contraseña</label>
-        <input type="password" id="pass" pattern="\d*" name="pass" maxlength="4"><br>
+        <input type="password" id="pass" pattern="\d*" name="pass" maxlength="4" required><br>
         <input type="submit" value="Ingresar" id="submit">
     </form>
 
@@ -26,7 +26,7 @@
         <input type="text" id="uname" name="uname" oninput="" required><br>
         <label for="document">Número de Documento</label>
         <input type="number" id="document" name="document" required><br>
-        <label for="type">Tipo</label>
+        <h5>Tipo</h5>
         <div>
             <input type="radio" id="admon" name="type" value="admon" required>
             <label for="admon">Administrador</label>
@@ -43,8 +43,17 @@
         <H1>$<span>10,000,000</span> COP </H1>
     </header>
 
-    <button id="withdraw"> RETIRAR </button>
-    <button id="deposit"> DEPOSITAR </button>
+    <footer>
+        <div>
+            <button id="withdraw"> RETIRAR </button>
+            <img src="key.png" alt="Client connected" class="client">
+        </div>
+        
+        <div>
+            <button id="deposit"> DEPOSITAR </button>
+            <img src="key.png" alt="Client connected" class="admon">
+        </div>
+    </footer>
 
 </div>
 </body>

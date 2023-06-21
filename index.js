@@ -1,4 +1,8 @@
+// Greet && introductory instructions 
 console.log('Hello World from JS!')
+console.log('usersList()    will log existing users list')
+console.log('admon          will log current admon session')
+console.log('client         will log current client session')
 
 // input fields ONLY NUMS restriction with regEx
 document.querySelectorAll('input:not([type="submit"]')
@@ -14,17 +18,26 @@ const existing = {
     1234: {
         name: 'first Client',
         type: 'client',
+        user: 1234,
         pass: 1234
     },
     5678: {
         name: 'first Admin',
         type: 'admon',
+        user: 5678,
         pass: 5678
     }
 }
 
-const logUsers = () => console.log('Existing users', existing)
-logUsers()
+// sessions [admon, client]
+let admon, client
+
+// SHOW TESTING EXISTING USERS FROM START
+const usersList = () => console.log(
+    'Existing users', 
+    Object.keys(existing).length, 
+    existing
+); usersList()
 
 // form [beginning]
 const form = document.querySelector('form') 
@@ -44,11 +57,25 @@ form.addEventListener('submit', e => {
     : signUp()
 
     function loggedIn() { 
-        alert(`¡Bienvenido, ${existing[user].name}!`)
         form.style.display = 'none'
-        
         form.querySelectorAll(':not([type="submit"])')
         .forEach(field => field.value = '')
+
+        const thisUser = existing[user] 
+
+        let session = `[${thisUser.type}] ${thisUser.name} logged`
+        console.log(session)
+
+        thisUser.type == 'admon'
+        ? admon = thisUser 
+        : client = thisUser
+
+        console.log(thisUser.type, thisUser)
+
+        const key = document.querySelector(`footer .${thisUser.type}`)
+        key.style.display = 'flex'
+        key.title = `${thisUser.type == 'admon' ? 'Administrador' : 'Cliente'}\n${thisUser.name}\nC.C. ${thisUser.user}\nClave ${thisUser.pass}`
+
     }
 
     function signUp() {
@@ -70,34 +97,21 @@ form.addEventListener('submit', e => {
 
             for (const property of properties) {
                 const inputValue = property == ':checked'
-                ? registerForm.querySelector(`${property}`).id 
+                ? registerForm.querySelector(`${property}`).id
                 : registerForm.querySelector(`${property}`).value
 
                 destructAssign.push(inputValue)
             }
         
             let [nm, cc, tp, pw] = destructAssign
-            existing[cc] = { name: nm, type: tp, pass: pw }
+            existing[cc] = { name: nm, type: tp, user: cc, pass: pw }
 
-            console.log('new user', cc, existing[cc])
-            logUsers()
+            console.log('new user registered:', cc, existing[cc])
+            console.log('Users list updated')
+            usersList()
         })
     }
 })
-
-// sinking down popped up forms
-document.onclick = e => { 
-    const login_form = document.querySelector('form')
-    const signUp_form = document.querySelector('#signup')
-
-    const loginNotClick = e.target != login_form 
-    const loginOn = login_form.style.display == 'flex'
-
-    if (loginNotClick && loginOn) login_form.style.display = 'none'
-    console.log(e.target)
-
-    // console.log(e.target) Interesting line to debug
-}
 // form [ending]
 
 
@@ -118,27 +132,53 @@ function trade(loot = 0) {
 }
 
 // buttons
-document.querySelector('#deposit') // deposit button
-.onclick = () => handleButReq(4000, 'Administrator')
+const depositBut = document.querySelector('#deposit')
+depositBut.onclick = () => {
+    if (!!admon) return console.log('ADMON LOGGEADOO')
+    return  popUpForm(4000, 'Administrator')
+}
 
-document.querySelector('#withdraw') // withdraw button
-.onclick = () => handleButReq(-4000, 'Cliente')
+const withdrawBut = document.querySelector('#withdraw')
+withdrawBut.onclick = () => {
+    if (!!client) return console.log('CLIENT LOGGEADOO')
+    return popUpForm(-4000, 'Cliente')
+}
 
-function handleButReq(amount, user) { 
+function popUpForm(amount, user) { 
+    // if ()
+
     form.style.display = 'flex'
     form.querySelector('form span')
     .innerText = user
     
     trade(amount)
-}
 
+    // sinking down popped up forms
+    document.addEventListener('click', sinkDownForm)
+
+    function sinkDownForm(e) {
+        const otherForm = document.querySelector('#signup')
+
+        const buttonsClicked = e.target == depositBut
+            || e.target == withdrawBut
+        
+        const formClicked = form.contains(e.target) 
+            || otherForm.contains(e.target)
+
+        if (buttonsClicked || formClicked) return
+
+        form.style.display = 'none'
+        otherForm.style.display = 'none'
+        document.removeEventListener('click', sinkDownForm)
+    }
+}
 // loot [ending]
 
 
 
 
 
-const cajero = [
+const ATM = [
     {
         value: 5_000,
         quant: 0

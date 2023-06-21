@@ -33,3 +33,17 @@ form {
 #signup {
     display: none;
 }
+
+footer {
+    width: min-content;
+    display: flex;
+
+    & div {
+        width: 5rem;
+    }
+
+    & img {
+        display: none;
+        width: 100%;
+    }
+}
