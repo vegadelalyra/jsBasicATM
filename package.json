@@ -1,0 +1,13 @@
+{
+  "name": "sprint1",
+  "version": "0.0.1",
+  "description": "First sprint from MAKAIA BOOTCAMP: ATM with admin/client",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Vega de la Lyra <lyradeperseo@gmail.com> (https://www.linkedin.com/in/vegadelalyra/)",
+  "license": "MIT"
+}

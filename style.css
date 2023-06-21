@@ -1,0 +1,31 @@
+body {
+    background-color:darkslateblue;
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+}
+
+form {
+    z-index: 9999;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    display: none;
+    flex-direction: column;
+    align-items: center;
+
+    background-color: aqua;
+    padding: 2vw;
+    width: 50vw;
+
+    & #submit {
+        max-width: min-content;
+    }
+
+    & h5 {
+        position: absolute;
+        top:-8%;
+    }
+}
