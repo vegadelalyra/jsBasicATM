@@ -1,9 +1,10 @@
 console.log('Hello World from JS!')
 
 // input fields ONLY NUMS restriction with regEx
-document.querySelectorAll('[type="text"]')
+document.querySelectorAll('input:not([type="submit"]')
 .forEach(input => input.addEventListener(
     'input', function() { 
+        if (this.id == 'uname') return // exception for uname
         this.value = this.value.replace(/[^0-9]/g, '') 
     }
 ))
@@ -11,16 +12,19 @@ document.querySelectorAll('[type="text"]')
 // existing users 
 const existing = {
     1234: {
-        pass: 1234,
         name: 'first Client',
-        type: 'client'
+        type: 'client',
+        pass: 1234
     },
     5678: {
-        pass: 5678,
         name: 'first Admin',
-        type: 'admon'
+        type: 'admon',
+        pass: 5678
     }
 }
+
+const logUsers = () => console.log('Existing users', existing)
+logUsers()
 
 // form [beginning]
 const form = document.querySelector('form') 
@@ -31,11 +35,13 @@ form.addEventListener('submit', e => {
     let user = form.querySelector('#user').value
     let pass = form.querySelector('#pass').value
 
+    if (!user || !pass) return
+
     existing[user] 
     ? existing[user].pass == pass 
         ? loggedIn()
         : alert(`CLAVE INCORRECTA (Verifica en la lista de usuarios).`)
-    : alert(`El usuario ${user} NO EXISTE. ¿Quieres crearlo?`)
+    : signUp()
 
     function loggedIn() { 
         alert(`¡Bienvenido, ${existing[user].name}!`)
@@ -44,7 +50,54 @@ form.addEventListener('submit', e => {
         form.querySelectorAll(':not([type="submit"])')
         .forEach(field => field.value = '')
     }
+
+    function signUp() {
+        const msg = `El usuario ${user} NO EXISTE. ¿Quieres crearlo?`
+        const userWantsToRegister = window.confirm(msg)
+        
+        const registerForm = document.querySelector('#signup')
+        if (userWantsToRegister) registerForm.style.display = 'flex'
+
+        registerForm.addEventListener('submit', e => {
+            e.preventDefault()
+
+            let properties = [
+                '#uname', 
+                '#document', 
+                ':checked', 
+                '#password'
+            ], destructAssign = []
+
+            for (const property of properties) {
+                const inputValue = property == ':checked'
+                ? registerForm.querySelector(`${property}`).id 
+                : registerForm.querySelector(`${property}`).value
+
+                destructAssign.push(inputValue)
+            }
+        
+            let [nm, cc, tp, pw] = destructAssign
+            existing[cc] = { name: nm, type: tp, pass: pw }
+
+            console.log('new user', cc, existing[cc])
+            logUsers()
+        })
+    }
 })
+
+// sinking down popped up forms
+document.onclick = e => { 
+    const login_form = document.querySelector('form')
+    const signUp_form = document.querySelector('#signup')
+
+    const loginNotClick = e.target != login_form 
+    const loginOn = login_form.style.display == 'flex'
+
+    if (loginNotClick && loginOn) login_form.style.display = 'none'
+    console.log(e.target)
+
+    // console.log(e.target) Interesting line to debug
+}
 // form [ending]
 
 
@@ -80,3 +133,31 @@ function handleButReq(amount, user) {
 }
 
 // loot [ending]
+
+
+
+
+
+const cajero = [
+    {
+        value: 5_000,
+        quant: 0
+    },
+    {
+        value: 10_000,
+        quant: 0
+    },
+    {
+        value: 20_000,
+        quant: 0
+    },
+    {
+        value: 50_000,
+        quant: 0
+    },
+    {
+        value: 100_000,
+        quant: 0
+    },
+
+]

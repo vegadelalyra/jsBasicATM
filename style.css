@@ -2,6 +2,7 @@ body {
     background-color:darkslateblue;
     position: relative;
     height: 100%;
+    width: 100%;
     overflow: hidden;
 }
 
@@ -18,7 +19,7 @@ form {
 
     background-color: aqua;
     padding: 2vw;
-    width: 50vw;
+    width: fit-content;
 
     & #submit {
         max-width: min-content;
@@ -28,4 +29,7 @@ form {
         position: absolute;
         top:-8%;
     }
+}
+#signup {
+    display: none;
 }
