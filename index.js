@@ -57,10 +57,12 @@ form.addEventListener('submit', e => {
     : signUp()
 
     function loggedIn() { 
+        // Dissapear and reset log screen
         form.style.display = 'none'
         form.querySelectorAll(':not([type="submit"])')
         .forEach(field => field.value = '')
 
+        // Log session info
         const thisUser = existing[user] 
 
         let session = `[${thisUser.type}] ${thisUser.name} logged`
@@ -72,10 +74,12 @@ form.addEventListener('submit', e => {
 
         console.log(thisUser.type, thisUser)
 
+        // Pop up key image with user info 
         const key = document.querySelector(`footer .${thisUser.type}`)
         key.style.display = 'flex'
         key.title = `${thisUser.type == 'admon' ? 'Administrador' : 'Cliente'}\n${thisUser.name}\nC.C. ${thisUser.user}\nClave ${thisUser.pass}`
 
+        // 
     }
 
     function signUp() {
@@ -125,33 +129,50 @@ function trade(loot = 0) {
     .innerText.replace(/,/g, '')
 
     const startingValue = Number(htmlNum)
-    const endingValue = startingValue + loot
+    const endingValue = startingValue + loot 
+    > 0 ? startingValue + loot : 0 
 
     document.querySelector('header span')
     .innerText = endingValue.toLocaleString()
+
+    if (endingValue == 0) console
+    .log('Cajero en mantenimiento, vuelva pronto.')
 }
+
+// HOW MANY INPUT 
+const howManyInput = document.querySelector('#many')
+
+// Add separators to how many input value
+howManyInput.addEventListener('input', () => {
+  howManyInput.value = howManyInput.value
+  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')  
+
+  howManyInput.value = '$' + howManyInput.value
+})
+
+// get formatted number of how many
+const howMany = () => Number(
+    howManyInput.value.match(/\d+/g).join('')
+)
 
 // buttons
 const depositBut = document.querySelector('#deposit')
 depositBut.onclick = () => {
-    if (!!admon) return console.log('ADMON LOGGEADOO')
-    return  popUpForm(4000, 'Administrator')
+    if (!!admon) return trade(howMany()) 
+    return  popUpForm('Administrator')
 }
 
 const withdrawBut = document.querySelector('#withdraw')
 withdrawBut.onclick = () => {
-    if (!!client) return console.log('CLIENT LOGGEADOO')
-    return popUpForm(-4000, 'Cliente')
+    if (!!client) return trade(howMany() * -1)
+    return popUpForm('Cliente')
 }
 
-function popUpForm(amount, user) { 
-    // if ()
-
+function popUpForm(user) { 
+    // spawn form to log in
     form.style.display = 'flex'
     form.querySelector('form span')
     .innerText = user
-    
-    trade(amount)
 
     // sinking down popped up forms
     document.addEventListener('click', sinkDownForm)
@@ -174,10 +195,7 @@ function popUpForm(amount, user) {
 }
 // loot [ending]
 
-
-
-
-
+// cashier [beginning]
 const ATM = [
     {
         value: 5_000,
@@ -201,3 +219,4 @@ const ATM = [
     },
 
 ]
+// cashier [ending]
