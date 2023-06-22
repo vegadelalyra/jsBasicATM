@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,7 @@
 <body>
 
     <form>
-        <h5> Accediendo como <span>ADMINISTRADOR</span></h5><br><br>
+        <h5> Accediendo como <span>Cliente</span></h5><br><br>
         <label for="user">Documento de Identidad</label>
         <input type="text" id="user" name="user" maxlength="12" pattern="\d*" required><br>
         <label for="pass">Contraseña</label>
@@ -22,17 +22,17 @@
 
     <form id="signup">
         <h5>Registro</h5><br>
+        <h6>Tipo</h6>
+        <div>
+            <input type="radio" id="admon" name="type" value="admon" required>
+            <label for="admon">Administrador</label>
+            <input type="radio" id="client" name="type" value="cli" required>
+            <label for="cli">Cliente</label>
+        </div><br>
         <label for="uname">Nombre y Apellido</label>
         <input type="text" id="uname" name="uname" oninput="" required><br>
         <label for="document">Número de Documento</label>
         <input type="number" id="document" name="document" required><br>
-        <h5>Tipo</h5>
-        <div>
-            <input type="radio" id="admon" name="type" value="admon" required>
-            <label for="admon">Administrador</label>
-            <input type="radio" id="cli" name="type" value="cli" required>
-            <label for="cli">Cliente</label>
-        </div><br>
         <label for="password">Contraseña</label>
         <input type="password" id="password" name="password" required><br>
         <input type="submit" value="Registrar">

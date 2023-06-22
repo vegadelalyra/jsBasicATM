@@ -48,13 +48,11 @@ form.addEventListener('submit', e => {
     let user = form.querySelector('#user').value
     let pass = form.querySelector('#pass').value
 
-    if (!user || !pass) return
-
     existing[user] 
     ? existing[user].pass == pass 
         ? loggedIn()
         : alert(`CLAVE INCORRECTA (Verifica en la lista de usuarios).`)
-    : signUp()
+    : signUp(user, pass, form.querySelector('span'))
 
     function loggedIn() { 
         // Dissapear and reset log screen
@@ -82,14 +80,23 @@ form.addEventListener('submit', e => {
         // 
     }
 
-    function signUp() {
+    function signUp(u, p, t) {
+        // Validate whether user wants to register
         const msg = `El usuario ${user} NO EXISTE. ¿Quieres crearlo?`
         const userWantsToRegister = window.confirm(msg)
+        if (!userWantsToRegister) return 
         
+        // pop up register form and auto fill
         const registerForm = document.querySelector('#signup')
-        if (userWantsToRegister) registerForm.style.display = 'flex'
+        registerForm.style.display = 'flex'
+        t = 'Cliente' ? 'client' : 'admon'
+        registerForm.querySelector(`#${t}`).checked = true
+        registerForm.querySelector('#document').value = u
+        registerForm.querySelector('#password').value = p
 
-        registerForm.addEventListener('submit', e => {
+        registerForm.addEventListener('submit', e => newUser(e))
+
+        function newUser(e) {
             e.preventDefault()
 
             let properties = [
@@ -110,10 +117,17 @@ form.addEventListener('submit', e => {
             let [nm, cc, tp, pw] = destructAssign
             existing[cc] = { name: nm, type: tp, user: cc, pass: pw }
 
-            console.log('new user registered:', cc, existing[cc])
+            console.log('[new user]', nm, 'registered', existing[cc])
             console.log('Users list updated')
-            usersList()
-        })
+            usersList(); loggedIn(); registerForm
+            .removeEventListener('submit', e => newUser(e))
+
+            registerForm.style.display = 'none'
+            // here it lacks to reset all values
+            registerForm.querySelector(`#${t}`).checked = false
+            registerForm.querySelector('#document').value = ''
+            registerForm.querySelector('#password').value = ''
+        }
     }
 })
 // form [ending]
@@ -124,19 +138,19 @@ form.addEventListener('submit', e => {
 // header
 document.querySelector('header h1').innerText
 
-function trade(loot = 0) {
+function trade(loot = 0, client) {
     const htmlNum = document.querySelector('header span')
     .innerText.replace(/,/g, '')
 
     const startingValue = Number(htmlNum)
+
+    if (startingValue == 0 && client) return 
+
     const endingValue = startingValue + loot 
     > 0 ? startingValue + loot : 0 
 
     document.querySelector('header span')
     .innerText = endingValue.toLocaleString()
-
-    if (endingValue == 0) console
-    .log('Cajero en mantenimiento, vuelva pronto.')
 }
 
 // HOW Much INPUT 
@@ -144,6 +158,13 @@ const howMuchInput = document.querySelector('#much')
 
 // Add separators && $ to how Much input value
 const giveFormat = gaveNum => {
+    if (gaveNum) {
+        gaveNum = String(gaveNum)
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',')  
+        
+        return gaveNum = '$' + gaveNum + ' COP'         
+    }
+
     howMuchInput.value = howMuchInput.value
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',')  
     
@@ -193,8 +214,14 @@ function popUpBillCounter(done) {
         distribution = distribution % bill 
     }
 
-    console.log(`Loot ${done}:`, totalValue, quant)
-    if (done == 'withdrawn') return trade(howMuch() * -1)
+    if (Number(document.querySelector('header span')
+    .innerText.replace(/,/g, '')) == 0) console.log(
+        'Cajero en mantenimiento, vuelva pronto.') 
+    else console.log(`Loot ${done}:`, giveFormat(totalValue), quant)
+
+    if (done == 'deposited') return trade(howMuch())
+    return trade(howMuch() * -1, true)
+
 }
 
 // log in screen

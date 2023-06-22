@@ -51,6 +51,10 @@ form {
 }
 #signup {
     display: none;
+
+    & h6 {
+        margin: 0;
+    }
 }
 
 footer {
