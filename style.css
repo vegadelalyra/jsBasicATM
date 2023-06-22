@@ -69,15 +69,16 @@ footer {
 
 main { 
     padding: 2vh 0vh;
-    width: min-content;
+    width: fit-content;
     align-items: center;
     flex-direction: column;
     display: flex;
 }
 
-div form {
+aside form {
     z-index: 0;
     border-radius: 1rem;
-    display: flex;
+    display: none;
+    /* display: flex; */
     width: min-content;
 }

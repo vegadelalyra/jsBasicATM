@@ -139,36 +139,66 @@ function trade(loot = 0) {
     .log('Cajero en mantenimiento, vuelva pronto.')
 }
 
-// HOW MANY INPUT 
-const howManyInput = document.querySelector('#many')
+// HOW Much INPUT 
+const howMuchInput = document.querySelector('#much')
 
-// Add separators to how many input value
-howManyInput.addEventListener('input', () => {
-  howManyInput.value = howManyInput.value
-  .replace(/\B(?=(\d{3})+(?!\d))/g, ',')  
+// Add separators && $ to how Much input value
+const giveFormat = gaveNum => {
+    howMuchInput.value = howMuchInput.value
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ',')  
+    
+    return howMuchInput.value = '$' + howMuchInput.value
+}; howMuchInput.addEventListener('input', giveFormat)
 
-  howManyInput.value = '$' + howManyInput.value
+howMuchInput.addEventListener('blur', () => {
+    const pureValue = howMuch()
+    const rounded = Math.floor(pureValue / 5_000) * 5_000
+    howMuchInput.value = rounded < 5_000 ? 5_000 : rounded
+    return giveFormat() 
 })
 
-// get formatted number of how many
-const howMany = () => Number(
-    howManyInput.value.match(/\d+/g).join('')
+// get formatted number of how Much
+const howMuch = () => Number(
+    howMuchInput.value.match(/\d+/g).join('')
 )
 
-// buttons
+// BUTTONS [beginning]
+
+// deposit 
 const depositBut = document.querySelector('#deposit')
 depositBut.onclick = () => {
-    if (!!admon) return trade(howMany()) 
-    return  popUpForm('Administrator')
+    if (!admon) return popUpSignForm('Administrator') 
+    return popUpBillCounter('deposited')  
 }
 
+// withdraw
 const withdrawBut = document.querySelector('#withdraw')
 withdrawBut.onclick = () => {
-    if (!!client) return trade(howMany() * -1)
-    return popUpForm('Cliente')
+    if (!client) return popUpSignForm('Cliente') 
+    return popUpBillCounter('withdrawn')
 }
 
-function popUpForm(user) { 
+// bill counter
+function popUpBillCounter(done) {
+    const totalValue = howMuch()
+
+    // The DownWard Spiral
+    const bills = [ 100_000, 50_000, 20_000, 10_000, 5_000 ]
+    let quant = {}, distribution = totalValue
+
+    for (const bill of bills) {
+        if (bill > distribution) continue
+        
+        quant[bill] = Math.floor(distribution / bill)
+        distribution = distribution % bill 
+    }
+
+    console.log(`Loot ${done}:`, totalValue, quant)
+    if (done == 'withdrawn') return trade(howMuch() * -1)
+}
+
+// log in screen
+function popUpSignForm(user) { 
     // spawn form to log in
     form.style.display = 'flex'
     form.querySelector('form span')
@@ -192,7 +222,8 @@ function popUpForm(user) {
         otherForm.style.display = 'none'
         document.removeEventListener('click', sinkDownForm)
     }
-}
+} // BUTTONS [ending] 
+
 // loot [ending]
 
 // cashier [beginning]
