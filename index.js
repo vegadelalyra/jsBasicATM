@@ -77,7 +77,10 @@ form.addEventListener('submit', e => {
         key.style.display = 'flex'
         key.title = `${thisUser.type == 'admon' ? 'Administrador' : 'Cliente'}\n${thisUser.name}\nC.C. ${thisUser.user}\nClave ${thisUser.pass}`
 
-        // 
+        // execute deposit or withdraw after logging
+        thisUser.type == 'admon'
+        ? popUpBillCounter('deposited')
+        : popUpBillCounter('withdrawn') 
     }
 
     function signUp(u, p, t) {
@@ -215,9 +218,11 @@ function popUpBillCounter(done) {
         document.querySelector(`#i${bill}`).value = quant[bill]
     }
 
-    if (Number(document.querySelector('header span')
-    .innerText.replace(/,/g, '')) == 0) console
+    if (Number(document.querySelector('header span').innerText
+    .replace(/,/g, '')) == 0 && done == 'withdrawn') console
     .log('Cajero en mantenimiento, vuelva pronto.') 
+    else if (done == 'withdrawn') console
+    .log(`Loot ${done}:`, giveFormat(totalValue), quant)
 
     // sinking down popped up forms
     document.addEventListener('click', sinkDownForm)
@@ -237,7 +242,6 @@ function popUpBillCounter(done) {
         otherForm.style.display = 'none'
         document.removeEventListener('click', sinkDownForm)
     }
-    
     if (done == 'deposited') return popFillMenu()
     return trade(howMuch() * -1, true)
 
@@ -245,13 +249,16 @@ function popUpBillCounter(done) {
         const billsMenu = document.querySelector('aside form')
         billsMenu.style.display = 'flex'
         
-        billsMenu.addEventListener('submit', e => {
+        billsMenu.onsubmit = e => logLoot(e)
+
+        function logLoot(e) {
             e.preventDefault()
-            
+
             console.log(`Loot ${done}:`, giveFormat(totalValue), quant)
             billsMenu.style.display = 'none'
+
             return trade(howMuch())
-        })
+        } 
     }
 }
 
@@ -291,33 +298,10 @@ function popUpSignForm(user) {
         img.class == 'admon' 
         ? admon = undefined
         : client = undefined
+        img.class == 'admon' 
+        ? console.log('[admon] logged out')
+        : console.log('[client] logged out')
     }))
 } // BUTTONS [ending] 
 
 // loot [ending]
-
-// cashier [beginning]
-const ATM = [
-    {
-        value: 5_000,
-        quant: 0
-    },
-    {
-        value: 10_000,
-        quant: 0
-    },
-    {
-        value: 20_000,
-        quant: 0
-    },
-    {
-        value: 50_000,
-        quant: 0
-    },
-    {
-        value: 100_000,
-        quant: 0
-    },
-
-]
-// cashier [ending]
