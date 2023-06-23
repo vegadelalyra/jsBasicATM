@@ -184,7 +184,6 @@ const howMuch = () => Number(
 )
 
 // BUTTONS [beginning]
-
 // deposit 
 const depositBut = document.querySelector('#deposit')
 depositBut.onclick = () => {
@@ -212,16 +211,48 @@ function popUpBillCounter(done) {
         
         quant[bill] = Math.floor(distribution / bill)
         distribution = distribution % bill 
+
+        document.querySelector(`#i${bill}`).value = quant[bill]
     }
 
     if (Number(document.querySelector('header span')
-    .innerText.replace(/,/g, '')) == 0) console.log(
-        'Cajero en mantenimiento, vuelva pronto.') 
-    else console.log(`Loot ${done}:`, giveFormat(totalValue), quant)
+    .innerText.replace(/,/g, '')) == 0) console
+    .log('Cajero en mantenimiento, vuelva pronto.') 
 
-    if (done == 'deposited') return trade(howMuch())
+    // sinking down popped up forms
+    document.addEventListener('click', sinkDownForm)
+
+    function sinkDownForm(e) {
+        const otherForm = document.querySelector('aside form')
+
+        const buttonsClicked = e.target == depositBut
+            || e.target == withdrawBut
+        
+        const formClicked = form.contains(e.target) 
+            || otherForm.contains(e.target)
+
+        if (buttonsClicked || formClicked) return
+
+        form.style.display = 'none'
+        otherForm.style.display = 'none'
+        document.removeEventListener('click', sinkDownForm)
+    }
+    
+    if (done == 'deposited') return popFillMenu()
     return trade(howMuch() * -1, true)
 
+    function popFillMenu() {
+        const billsMenu = document.querySelector('aside form')
+        billsMenu.style.display = 'flex'
+        
+        billsMenu.addEventListener('submit', e => {
+            e.preventDefault()
+            
+            console.log(`Loot ${done}:`, giveFormat(totalValue), quant)
+            billsMenu.style.display = 'none'
+            return trade(howMuch())
+        })
+    }
 }
 
 // log in screen
@@ -249,6 +280,18 @@ function popUpSignForm(user) {
         otherForm.style.display = 'none'
         document.removeEventListener('click', sinkDownForm)
     }
+
+    // log out functionality
+    document.querySelectorAll('footer img')
+    .forEach(img => img.addEventListener('contextmenu', e => {
+        e.preventDefault()
+
+        img.title = ''
+        img.style.display = 'none'
+        img.class == 'admon' 
+        ? admon = undefined
+        : client = undefined
+    }))
 } // BUTTONS [ending] 
 
 // loot [ending]
