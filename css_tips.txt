@@ -1,0 +1,3 @@
+wbefore each css line: all is responsive
+start global first
+avoid fixed sizes
