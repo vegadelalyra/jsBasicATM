@@ -39,36 +39,37 @@ form {
     padding: 2vw;
     width: fit-content;
     border-radius: 1rem;
-
-    & #submit {
-        max-width: min-content;
-    }
-
-    & h5 {
-        position: absolute;
-        top:-8%;
-    }
 }
+
+form #submit {
+    max-width: min-content;
+}
+
+form h5 {
+    position: absolute;
+    top:-8%;
+}
+
 #signup {
     display: none;
+}
 
-    & h6 {
-        margin: 0;
-    }
+#signup h6 {
+    margin: 0;
 }
 
 footer {
     width: min-content;
     display: flex;
+}
 
-    & div {
-        width: 5rem;
-    }
+footer div {
+    width: 5rem;
+}
 
-    & img {
-        display: none;
-        width: 100%;
-    }
+footer img {
+    display: none;
+    width: 100%;
 }
 
 main { 
@@ -85,8 +86,8 @@ aside form {
     display: none;
     /* display: flex; */
     width: min-content;
-
-    & h4 { 
-        margin: 0;
-    }
+}
+    
+aside form h4 { 
+    margin: 0;
 }
